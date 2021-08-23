@@ -115,7 +115,7 @@ def url(message):
 
 @bot.message_handler(commands=['help']) 
 def help(message):
-    msg = bot.send_message(message.chat.id, 'Hola!!! En qué puedo ayudarlo')
+    msg = bot.send_message(message.chat.id, 'Hola!!! En qué puedo ayudarlo?')
     bot.register_next_step_handler(msg, help_request)
 
 
