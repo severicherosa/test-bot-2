@@ -55,7 +55,7 @@ def answer(call):
 @bot.message_handler(commands= ['info'])
 def info(message):
     markup = types.InlineKeyboardMarkup()
-    insta = types.InlineKeyboardButton(text='Instagram', url='https://instagram.com/coworkingifgzp?utm_medium=copy_link')
+    insta = types.InlineKeyboardButton(text='Instagram', url='https://www.instagram.com/?hl=es')
     markup.add(insta)
    
 
@@ -115,7 +115,7 @@ def url(message):
 
 @bot.message_handler(commands=['help']) 
 def help(message):
-    msg = bot.send_message(message.chat.id, 'Доброго дня! Чим я можу Вам допомогти?')
+    msg = bot.send_message(message.chat.id, 'Hola!!! En qué puedo ayudarlo')
     bot.register_next_step_handler(msg, help_request)
 
 
