@@ -120,7 +120,7 @@ def help(message):
 
 
 def help_request(message):
-    bot.send_message(message.chat.id, 'Ваше питання переданий адміністратору, найближчим часов з Вами зв`яжуться')
+    bot.send_message(message.chat.id, 'Su pregunta se transfiere al administrador, en un futuro próximo nos comunicaremos con usted')
     Nickname = '@' + message.from_user.username
     bot.send_message('use logger to know id of chat, what you need to sent stars', '{0}\n{1}\n{2}\n{3}\n{4}'.format(message.text,
                                                                       message.chat.id,
@@ -135,10 +135,10 @@ def help_request(message):
 @bot.message_handler(commands=['comment']) 
 def comment(review):
     markup = types.InlineKeyboardMarkup()
-    coworking_button = types.InlineKeyboardButton(text='Зірочки', callback_data='btnCoworkingCALL')
-    btn_text_review_call = types.InlineKeyboardButton(text='Залиште відгук', callback_data='btn_text_review_call')
+    coworking_button = types.InlineKeyboardButton(text='Estrellas', callback_data='btnCoworkingCALL')
+    btn_text_review_call = types.InlineKeyboardButton(text='Deja un comentario', callback_data='btn_text_review_call')
     markup.add(coworking_button,btn_text_review_call)
-    adm = bot.send_message(review.chat.id, 'Оцініть сервіс коворкінга, нам важлива Ваша думка', reply_markup = markup)
+    adm = bot.send_message(review.chat.id, 'Evalúa el servicio de coworking, tu opinión es importante para nosotros', reply_markup = markup)
     bot.register_next_step_handler(adm, btn_text_review_call, btnCoworkingCALL, Star1c,Star2c,Star3c,Star4c,Star5c)
 
 
@@ -157,12 +157,12 @@ def btnCoworkingCALL(review):
     btnStar4c = types.InlineKeyboardButton(text='⭐️⭐️⭐️⭐️', callback_data='Star4c')
     btnStar5c = types.InlineKeyboardButton(text='⭐️⭐️⭐️⭐️⭐️', callback_data='Star5c')
     markupCow.add(btnStar1c,btnStar2c,btnStar3c,btnStar4c,btnStar5c)
-    bot.send_message(review.chat.id, 'Зробіть Ваш вибір',
+    bot.send_message(review.chat.id, 'Haz tu elección',
                      reply_markup=markupCow
                      )
 
 def coworking_request(review):
-    bot.send_message(review.chat.id, 'Дякуємо за Ваш відгук.')
+    bot.send_message(review.chat.id, 'Gracias por tus comentarios.')
     Nickname = '@' + review.from_user.username
     
 
@@ -172,11 +172,11 @@ def coworking_request(review):
 
 @bot.message_handler(commands=['btn_text_review_call'])
 def btn_text_review_call(review):
-    msg = bot.send_message(review.chat.id, 'Введіть Ваш відгук')
+    msg = bot.send_message(review.chat.id, 'Ingrese sus comentarios')
     bot.register_next_step_handler(msg, text_request)
 
 def text_request(review):
-    bot.send_message(review.chat.id, 'Дякуємо за Ваш відгук.')
+    bot.send_message(review.chat.id, 'Gracias por tus comentarios.')
     Nickname = '@' + review.from_user.username
     bot.send_message('use logger to know id of chat, what you need to sent stars', '{0}\n{1}\n{2}\n{3}\n{4}'.format(review.text,
                                                                       review.chat.id,
@@ -190,27 +190,27 @@ def text_request(review):
 @bot.message_handler(commands=['Star1c']) 
 def Star1c(review):
     bot.send_message('use logger to know id of chat, what you need to sent stars', '⭐️')
-    bot.send_message(review.chat.id, 'Дякуємо за Ваш вибір1')
+    bot.send_message(review.chat.id, 'Gracias por su elección')
     
 @bot.message_handler(commands=['Star2c']) 
 def Star2c(review):
     bot.send_message('use logger to know id of chat, what you need to sent stars', '⭐️⭐️')
-    bot.send_message(review.chat.id, 'Дякуємо за Ваш вибір!')
+    bot.send_message(review.chat.id, 'Gracias por su elección!')
 
 @bot.message_handler(commands=['Star3c']) 
 def Star3c(review):
     bot.send_message('use logger to know id of chat, what you need to sent stars', '⭐️⭐️⭐️')
-    bot.send_message(review.chat.id, 'Дякуємо за Ваш вибір!')
+    bot.send_message(review.chat.id, 'Gracias por su elección!')
 
 @bot.message_handler(commands=['Star4c']) 
 def Star4c(review):
     bot.send_message('use logger to know id of chat, what you need to sent stars', '⭐️⭐️⭐️⭐️')
-    bot.send_message(review.chat.id, 'Дякуємо за Ваш вибір!')
+    bot.send_message(review.chat.id, 'Gracias por su elección!')
 
 @bot.message_handler(commands=['Star5c']) 
 def Star5c(review):
     bot.send_message('use logger to know id of chat, what you need to sent stars', '⭐️⭐️⭐️⭐️⭐️')
-    bot.send_message(review.chat.id, 'Дякуємо за Ваш вибір!')
+    bot.send_message(review.chat.id, 'Gracias por su elección!')
 
 
 
