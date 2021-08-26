@@ -5,7 +5,7 @@ from telebot import types
 
 #logger = telebot.logger
 #telebot.logger.setLevel(logging.DEBUG)
-TOKEN = '1945274113:AAEYimj6dtgvk6QfNyNu8XzIhbn3dLY7koo'
+#TOKEN = '1945274113:AAEYimj6dtgvk6QfNyNu8XzIhbn3dLY7koo'
 CHAT_ID = ''
 bot = telebot.TeleBot(TOKEN)
 
@@ -18,7 +18,7 @@ def menu(message):
     item_price = types.InlineKeyboardButton(text='Precio de los servicios', callback_data='url')
     item_info = types.InlineKeyboardButton(text='Instagram', url='https://instagram.com/coworkingifgzp?utm_medium=copy_link')
     markup_inline.add(item_comment,item_help,item_price, item_info )
-    bot.send_message(message.chat.id, '¡Hola, bienvenido a IFGCoworking! Haz tu elección',
+    bot.send_message(message.chat.id, 'Please select your language\nPor favor seleccionar un lenguage',
                      reply_markup=markup_inline
                      )
     
