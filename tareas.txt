@@ -1,0 +1,6 @@
+1= Funcionalidades de iteración
+    Acciones: /start, /landing, /osint
+    fecha de entraga: 25-08-2021
+    status: ✔️
+    commit: new file mybottest2
+    n° commit:5ea6b45
