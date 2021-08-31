@@ -1,7 +1,12 @@
 import telebot
+import re
 #import logging
 from telebot import types
 #from func import chat_log
+from log4python.Log4python import log
+TestLog = log("LogDemo")
+TestLog.debug("Debug Log")
+TestLog.info("Info Log")
 
 TOKEN = '1945274113:AAEYimj6dtgvk6QfNyNu8XzIhbn3dLY7koo'
 CHAT_ID = '1939761627'
@@ -28,7 +33,8 @@ option = {
 }
 va = option["lenguage"]
 print(len(va))
-
+TestLog.debug("Debug Log")
+TestLog.info("Info Log")
 
 
 
@@ -72,10 +78,28 @@ def item_english(message):
         menu_osint.add(opt1, opt2, opt3, opt4, opt5, opt6)
         bot.send_message(message.chat.id, 'Menu OSINT\nSelect an option',reply_markup=menu_osint)
 
+        @bot.message_handler(regexp='Opción 1')
+        def opt1(message):
+            msg = bot.reply_to(message, 'Enter email')
+            bot.register_next_step_handler(msg, process_age_step)
+
         @bot.message_handler(regexp='Main menu')
         def opt6(message):
             bot.send_message(message.chat.id, 'Main menu\nselect an option', reply_markup=menu_english)
-        
+
+
+def process_age_step(message):
+    try:
+        email = message.text
+        #validate
+        if is_valid_email(email):
+            bot.send_message(message.chat.id,'Correo valido')
+        else:
+            bot.send_message(message.chat.id,'Correo NO valido')
+    except Exception as e:
+        bot.reply_to(message, 'oooops')
+
+
 @bot.message_handler(regexp= 'Español 🇪🇸')
 def item_español(message):
     menu_español = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -87,6 +111,26 @@ def item_español(message):
     menu_español.add(tools_osint, version_pro, tools_extras, teams, help )
     bot.send_message(message.chat.id, 'Menu principal\nSeleciona una opción', reply_markup= menu_español)
 
-#@bot.message_handler()  
+body_regex = re.compile('''^(?!\.)([-a-z0-9!\#$%&'*+/=?^_`{|}~]|(?<!\.)\.)+(?<!\.)$''', re.VERBOSE | re.IGNORECASE)
+domain_regex = re.compile('''(localhost|([a-z0-9]([-\w]*[a-z0-9])?\.)+[a-z]{2,})$''', re.VERBOSE | re.IGNORECASE)
+
+def is_valid_email(email):
+    if not isinstance(email, str) or not email or '@' not in email:
+        return False
+    
+    body, domain = email.rsplit('@', 1)
+
+    match_body = body_regex.match(body)
+    match_domain = domain_regex.match(domain)
+
+    if not match_domain:
+        try:
+            domain_encoded = domain.encode('idna').decode('ascii')
+        except UnicodeError:
+            return False
+        match_domain = domain_regex.match(domain_encoded)
+
+    return (match_body is not None) and (match_domain is not None)
+ 
 
 bot.polling()
