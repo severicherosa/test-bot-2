@@ -4,3 +4,11 @@
     status: ✔️
     commit: new file mybottest2
     n° commit:5ea6b45
+
+2= Creador de validadores y gestion de logs
+    Acciones: tener iteracion con el usuario, recibi parametros dependiendo del menu de opciones, validar con expresiones regulares, guardar en un archivo log usando la libreria log4j de python
+    fecha de entrega: 30-08-21
+    status: ✔️
+    commit: Regex
+    n° commit: 459ab1d
+
