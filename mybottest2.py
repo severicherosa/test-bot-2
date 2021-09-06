@@ -4,6 +4,25 @@ import re
 from telebot import types
 #from func import chat_log
 from log4python.Log4python import log
+import sched
+import time
+
+scheduler = sched.scheduler(time.time, time.sleep) #aqui declare el scheduler
+
+def print_event(name, start):
+    now = time.time()
+    elapsed = int(now - start)
+    print('EVENT: {} elapsed={} name={}'.format(
+        time.ctime(now), elapsed, name))
+
+
+start = time.time()
+print('START:', time.ctime(start))
+scheduler.enter(2, 1, print_event, ('first', start))
+scheduler.enter(62, 1, print_event, ('second', start))
+
+scheduler.run()
+
 TestLog = log("LogDemo")
 TestLog.debug("Debug Log")
 TestLog.info("Info Log")
@@ -69,35 +88,72 @@ def item_english(message):
     @bot.message_handler(regexp='OSINT')
     def tools_osint_english(message):
         menu_osint = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        opt1=types.KeyboardButton('Opción 1')
-        opt2=types.KeyboardButton('Opción 2')
-        opt3=types.KeyboardButton('Opción 3')
-        opt4=types.KeyboardButton('Opción 4')
-        opt5=types.KeyboardButton('Opción 5')
-        opt6=types.KeyboardButton('Main menu')
-        menu_osint.add(opt1, opt2, opt3, opt4, opt5, opt6)
+        opt1=types.KeyboardButton('Whois')
+        opt2=types.KeyboardButton('Email check')
+        opt3=types.KeyboardButton('Username')
+        opt4=types.KeyboardButton('Enumeration')
+        opt5=types.KeyboardButton('Metadata')
+        opt6=types.KeyboardButton('Geo IP')
+        opt7=types.KeyboardButton('Depixely')
+        opt8=types.KeyboardButton('Main menu')
+        menu_osint.add(opt1, opt2, opt3, opt4, opt5, opt6, opt7, opt8)
         bot.send_message(message.chat.id, 'Menu OSINT\nSelect an option',reply_markup=menu_osint)
 
-        @bot.message_handler(regexp='Opción 1')
+        @bot.message_handler(regexp='Whois')
         def opt1(message):
-            msg = bot.reply_to(message, 'Enter email')
-            bot.register_next_step_handler(msg, process_age_step)
+            msg1 = bot.reply_to(message,'Enter website')
+            bot.register_next_step_handler(msg1, process_whois)
+
+        @bot.message_handler(regexp='Email check')
+        def opt2(message):
+            msg2 = bot.reply_to(message, 'Enter email')
+            bot.register_next_step_handler(msg2, process_age_step)
+
+        @bot.message_handler(regexp='Username')
+        def opt3(message):
+            bot.send_message(message.chat.id, 'Enter Username')
+
+        @bot.message_handler(regexp='Enumeration')
+        def opt4(message):
+            bot.send_message(message.chat.id, 'Enter domain to evaluate')
+
+        @bot.message_handler(regexp='Metadata')
+        def opt5(message):
+            bot.send_message(message.chat.id, 'Enter file')
+
+        @bot.message_handler(regexp='Geo IP')
+        def opt6(message):
+            bot.send_message(message.chat.id, 'Enter IP')
+
+        @bot.message_handler(regexp='Depixely')
+        def opt7(message):
+            bot.send_message(message.chat.id, 'Enter image JPEG / PNG')
 
         @bot.message_handler(regexp='Main menu')
-        def opt6(message):
+        def opt8(message):
             bot.send_message(message.chat.id, 'Main menu\nselect an option', reply_markup=menu_english)
 
+def process_whois(message):
+    try:
+        website = message.text
+        #validate
+        if is_valid_website(website):
+            bot.send_message(message.chat.id,'valid website')
+        else:
+            bot.send_message(message.chat.id,'invalid website')
+    except Exception as e:
+        bot.reply_to(message, 'oooops')
 
 def process_age_step(message):
     try:
         email = message.text
-        #validate
         if is_valid_email(email):
-            bot.send_message(message.chat.id,'Correo valido')
+            bot.send_message(message.chat.id,'Valid email')
         else:
-            bot.send_message(message.chat.id,'Correo NO valido')
+            bot.send_message(message.chat.id,'Invalid email')
     except Exception as e:
         bot.reply_to(message, 'oooops')
+
 
 
 @bot.message_handler(regexp= 'Español 🇪🇸')
@@ -110,7 +166,31 @@ def item_español(message):
     help= types.KeyboardButton('Help')
     menu_español.add(tools_osint, version_pro, tools_extras, teams, help )
     bot.send_message(message.chat.id, 'Menu principal\nSeleciona una opción', reply_markup= menu_español)
+            
+            
+            #REGEX:
 
+#regex de Dominio de sitio web
+patron = re.compile("^((ht|f)tp(s?)\:\/\/|~/|/)?([\w]+:\w+@)?([a-zA-Z]{1}([\w\-]+\.)+([\w]{2,5}))(:[\d]{1,5})?((/?\w+/)+|/?)(\w+\.[\w]{3,4})?((\?\w+=\w+)?(&\w+=\w+)*)?")
+
+def is_valid_website(website):
+    if not isinstance(website, str):
+        return False
+
+
+    match_website = patron.match(website)
+
+    if not match_website:
+        try:
+            website_encoded = website.encode('idna').decode('ascii')
+        except UnicodeError:
+            return False
+        match_website = patron.match(website_encoded)
+
+    return (match_website is not None)
+
+
+#regex de email
 body_regex = re.compile('''^(?!\.)([-a-z0-9!\#$%&'*+/=?^_`{|}~]|(?<!\.)\.)+(?<!\.)$''', re.VERBOSE | re.IGNORECASE)
 domain_regex = re.compile('''(localhost|([a-z0-9]([-\w]*[a-z0-9])?\.)+[a-z]{2,})$''', re.VERBOSE | re.IGNORECASE)
 
