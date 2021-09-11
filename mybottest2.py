@@ -73,7 +73,7 @@ def start_command(message):
                      )
 @bot.message_handler(regexp= 'English 🇺🇸')
 def item_english(message):
-    #print(message.chat)
+    print(message.chat)
     menu_english = types.ReplyKeyboardMarkup(resize_keyboard=True)
     
     tools_osint_english = types.KeyboardButton('OSINT')
